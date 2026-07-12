@@ -1,6 +1,9 @@
+import os
+
 from langchain_core.messages import SystemMessage
 from langchain_groq import ChatGroq
 
+from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import START, StateGraph, MessagesState
 from langgraph.prebuilt import tools_condition, ToolNode
 
@@ -33,16 +36,25 @@ def divide(a: int, b: int) -> float:
 
 tools = [add, multiply, divide]
 
-# Define LLM with bound tools
-llm = ChatGroq(model="openai/gpt-oss-120b")
-llm_with_tools = llm.bind_tools(tools)
-
 # System message
 sys_msg = SystemMessage(content="You are a helpful assistant tasked with writing performing arithmetic on a set of inputs.")
 
 # Node
 def assistant(state: MessagesState):
-   return {"messages": [llm_with_tools.invoke([sys_msg] + state["messages"])]}
+    llm = ChatGroq(model="openai/gpt-oss-120b")
+    llm_with_tools = llm.bind_tools(tools)
+    return {"messages": [llm_with_tools.invoke([sys_msg] + state["messages"])]}
+
+def _should_use_platform_persistence() -> bool:
+    return any(
+        os.getenv(name)
+        for name in (
+            "LANGGRAPH_API_URL",
+            "LANGGRAPH_RUNTIME_EDITION",
+            "LANGSMITH_LANGGRAPH_API_VARIANT",
+        )
+    )
+
 
 # Build graph
 builder = StateGraph(MessagesState)
@@ -57,5 +69,9 @@ builder.add_conditional_edges(
 )
 builder.add_edge("tools", "assistant")
 
-# Compile graph
-graph = builder.compile()
+# Compile graph with memory for local SDK usage, but avoid custom checkpointers in hosted LangGraph runtimes.
+react_graph_memory = builder.compile(
+    checkpointer=MemorySaver()
+) if not _should_use_platform_persistence() else builder.compile()
+
+graph = react_graph_memory
