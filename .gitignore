@@ -221,3 +221,5 @@ $RECYCLE.BIN/
 module-6/deployment/docker-compose.yml
 .python-version
 *.langgraph_api
+google-api-test.py
+open-router-test.py

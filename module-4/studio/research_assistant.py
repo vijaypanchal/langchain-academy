@@ -6,14 +6,15 @@ from typing_extensions import TypedDict
 from langchain_community.document_loaders import WikipediaLoader
 from langchain_tavily import TavilySearch  # updated 1.0
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, get_buffer_string
-from langchain_openai import ChatOpenAI
+from langchain_groq import ChatGroq
 
 from langgraph.constants import Send
 from langgraph.graph import END, MessagesState, START, StateGraph
 
-### LLM
+### LLM #llm = ChatGroq(model="openai/gpt-oss-120b", temperature=0) 
 
-llm = ChatOpenAI(model="gpt-4o", temperature=0) 
+from langchain_openrouter import ChatOpenRouter
+llm = ChatOpenRouter(model="openai/gpt-4o-mini", temperature=0)  # Cheap test model
 
 ### Schema 
 
@@ -186,10 +187,27 @@ def search_wikipedia(state: InterviewState):
     # Search query
     structured_llm = llm.with_structured_output(SearchQuery)
     search_query = structured_llm.invoke([search_instructions]+state['messages'])
+
+    if not getattr(search_query, "search_query", "").strip():
+        return {"context": ["No Wikipedia search query was generated."]}
     
     # Search
-    search_docs = WikipediaLoader(query=search_query.search_query, 
-                                  load_max_docs=2).load()
+    try:
+        search_docs = WikipediaLoader(query=search_query.search_query, 
+                                      load_max_docs=2).load()
+    except Exception as exc:
+        return {
+            "context": [
+                f'<Document source="wikipedia" />\nWikipedia lookup failed: {exc}\n</Document>'
+            ]
+        }
+
+    if not search_docs:
+        return {
+            "context": [
+                f'<Document source="wikipedia" />\nNo Wikipedia results were returned for query: {search_query.search_query}\n</Document>'
+            ]
+        }
 
      # Format
     formatted_search_docs = "\n\n---\n\n".join(
