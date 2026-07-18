@@ -223,3 +223,4 @@ module-6/deployment/docker-compose.yml
 *.langgraph_api
 google-api-test.py
 open-router-test.py
+module-0/basics.ipynb
