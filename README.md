@@ -55,13 +55,13 @@ $ export API_ENV_VAR="your-api-key-here"
 PS> $env:API_ENV_VAR = "your-api-key-here"
 ```
 
-### Set Groq API key for ChatGroq
+### Set Groq API key for ChatDeepSeek
 * If you don't have a Groq API key, you can sign up [here](https://console.groq.com/keys).
-* Set `GROQ_API_KEY` in your environment.
+* Set `DEEPSEEK_API_KEY` in your environment.
 
 ### Sign up and Set LangSmith API
 * Sign up for LangSmith [here](https://docs.langchain.com/langsmith/create-account-api-key#create-an-account-and-api-key), find out more about LangSmith and how to use it within your workflow [here](https://www.langchain.com/langsmith). 
-*  Set `LANGSMITH_API_KEY`, `LANGSMITH_TRACING_V2="true"` `LANGSMITH_PROJECT="langchain-academy"`in your environment 
+*  Set `LANGSMITH_API_KEY`, `LANGSMITH_TRACING_V2="true"` `LANGSMITH_PROJECT="langchain-handson"`in your environment 
 *  If you are on the EU instance also set `LANGSMITH_ENDPOINT`="https://eu.api.smith.langchain.com" as well.
 
 ### Set up Tavily API for web search
@@ -98,8 +98,8 @@ Open your browser and navigate to the Studio UI: `https://smith.langchain.com/st
 * Run this from the command line to create these files for module 1 to 5, as an example:
 ```
 for i in {1..5}; do
-  cp module-$i/studio/.env.example module-$i/studio/.env
-  echo "GROQ_API_KEY=\"$GROQ_API_KEY\"" > module-$i/studio/.env
+  cp .env.example module-$i/studio/.env
+  echo "DEEPSEEK_API_KEY=\"$DEEPSEEK_API_KEY\"" > module-$i/studio/.env
 done
 echo "TAVILY_API_KEY=\"$TAVILY_API_KEY\"" >> module-4/studio/.env
 ```
