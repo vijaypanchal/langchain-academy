@@ -6,15 +6,12 @@ from typing_extensions import TypedDict
 from langchain_community.document_loaders import WikipediaLoader
 from langchain_tavily import TavilySearch  # updated 1.0
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, get_buffer_string
-from langchain_groq import ChatGroq
+from langchain_deepseek import ChatDeepSeek
 
 from langgraph.constants import Send
 from langgraph.graph import END, MessagesState, START, StateGraph
 
-### LLM #llm = ChatGroq(model="openai/gpt-oss-120b", temperature=0) 
-
-from langchain_openrouter import ChatOpenRouter
-llm = ChatOpenRouter(model="openai/gpt-4o-mini", temperature=0)  # Cheap test model
+llm = ChatDeepSeek(model="deepseek-v4-flash", temperature=0)
 
 ### Schema 
 

@@ -1,7 +1,7 @@
 import os
 
 from langchain_core.messages import SystemMessage
-from langchain_groq import ChatGroq
+from langchain_deepseek import ChatDeepSeek
 
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import START, StateGraph, MessagesState
@@ -41,7 +41,7 @@ sys_msg = SystemMessage(content="You are a helpful assistant tasked with writing
 
 # Node
 def assistant(state: MessagesState):
-    llm = ChatGroq(model="openai/gpt-oss-120b")
+    llm = ChatDeepSeek(model="deepseek-v4-flash", temperature=0)
     llm_with_tools = llm.bind_tools(tools)
     return {"messages": [llm_with_tools.invoke([sys_msg] + state["messages"])]}
 

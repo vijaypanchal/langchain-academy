@@ -1,4 +1,4 @@
-from langchain_groq import ChatGroq
+from langchain_deepseek import ChatDeepSeek
 from langgraph.graph import MessagesState
 from langgraph.graph import StateGraph, START, END
 from langgraph.prebuilt import ToolNode, tools_condition
@@ -14,7 +14,7 @@ def multiply(a: int, b: int) -> int:
     return a * b
 
 # LLM with bound tool
-llm = ChatGroq(model="openai/gpt-oss-120b")
+llm = ChatDeepSeek(model="deepseek-v4-flash", temperature=0)
 llm_with_tools = llm.bind_tools([multiply])
 
 # Node

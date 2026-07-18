@@ -4,8 +4,8 @@ from langgraph.graph import MessagesState
 from langgraph.graph import StateGraph, START, END
 
 # We will use this model for both the conversation and the summarization
-from langchain_groq import ChatGroq
-model = ChatGroq(model="openai/gpt-oss-120b", temperature=0)
+from langchain_deepseek import ChatDeepSeek
+model = ChatDeepSeek(model="deepseek-v4-flash", temperature=0)
 
 # State class to store messages and summary
 class State(MessagesState):

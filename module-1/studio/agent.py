@@ -1,5 +1,5 @@
 from langchain_core.messages import SystemMessage
-from langchain_groq import ChatGroq
+from langchain_deepseek import ChatDeepSeek
 
 from langgraph.graph import START, StateGraph, MessagesState
 from langgraph.prebuilt import tools_condition, ToolNode
@@ -34,7 +34,7 @@ def divide(a: int, b: int) -> float:
 tools = [add, multiply, divide]
 
 # Define LLM with bound tools
-llm = ChatGroq(model="openai/gpt-oss-120b")
+llm = ChatDeepSeek(model="deepseek-v4-flash", temperature=0)
 llm_with_tools = llm.bind_tools(tools)
 
 # System message
